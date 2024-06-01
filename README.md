@@ -27,3 +27,17 @@ To use GNU toolchain and QEMU emulator, execute the following lines.
 $ sudo apt update
 $ sudo apt install build-essential gcc make perl dkms git gcc-riscv64-unknown-elf gdb-multiarch qemu-system-misc
 ```
+
+## RVOS
+### bootloader
+Before we start running our OS, we need to write a bootloader. 
+The bootloader is the first thing that runs when the computer is turned on. 
+It is responsible for loading the OS into memory and starting it. 
+The bootloader is stored in the first sector of the disk, which is 512 bytes long. 
+The bootloader is written in assembly and is very simple. It reads the OS from the disk and jumps to it. 
+The OS is stored in the second sector of the disk. The bootloader is stored in the file `boot.S`.
+
+We need to do the following steps to write the bootloader:
+1. Set up stack pointer for each CPU core.
+2. Load the OS from the disk into memory.
+3. Jump to the OS, which is stored in the second sector of the disk, and usually written in C. Note that in qemu, kernel is loaded at 0x80000000, qemu expects the kernel to be loaded at this address.
