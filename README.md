@@ -42,6 +42,3 @@ We need to do the following steps to write the bootloader:
 1. Set up stack pointer for each CPU core.
 2. Load the OS from the disk into memory.
 3. Jump to the OS, which is stored in the second sector of the disk, and usually written in C. Note that in qemu, kernel is loaded at 0x80000000, qemu expects the kernel to be loaded at this address.
-=======
-# riscv-os
->>>>>>> main
