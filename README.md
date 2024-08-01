@@ -28,6 +28,13 @@ $ sudo apt update
 $ sudo apt install build-essential gcc make perl dkms git gcc-riscv64-unknown-elf gdb-multiarch qemu-system-misc
 ```
 
+## QEMU for RISC-V
+We could use QEMU to emulate RISC-V architecture. And also using GDB to debug the code.
+To run the QEMU, we need to use the following command.
+```bash
+make run
+```
+
 ## RVOS
 ### bootloader
 Before we start running our OS, we need to write a bootloader. 
