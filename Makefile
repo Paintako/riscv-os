@@ -16,12 +16,14 @@ LD = riscv64-unknown-elf-ld
 CFLAGS = -nostdlib -fno-builtin -g -Wall -march=rv64g -mabi=lp64d -mcmodel=medany
 
 cfiles = $(wildcard *.c)
+asfiles = $(wildcard *.S)
 ofiles = $(cfiles:.c=.o)
-ofiles += boot.o
+ofiles += $(asfiles:.S=.o)
 
 run: kernel.elf
 	echo "Press Ctrl-A and then X to exit QEMU"
 	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -s -S -kernel kernel.elf
+
 
 all: kernel.elf
 
@@ -33,12 +35,12 @@ kernel.elf: $(ofiles)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
-# $^: all prerequisites, which is on the right side of the colon
-boot.o: boot.S
-	$(AS) -o boot.o $^
+# compile all assembly files
+%.o: %.S
+	$(AS) -o $@ $<
 
 objdump: kernel.elf
-	echo "Disassemble kernel.elf"
+	@echo "Disassemble kernel.elf"
 	riscv64-unknown-elf-objdump -d kernel.elf
 
 .PHONY : clean

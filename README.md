@@ -51,6 +51,21 @@ We need to do the following steps to write the bootloader:
 
 ### Memory management
 Using linker script to manage memory layout.
-The linker script is stored in the file `linker.ld`.
 By define the memory layout in the linker script, we can control where the code and data are placed in memory.
 We can use the memory more efficiently by utilizing linker, and accomplish function such as memory protection or malloc.
+
+We can use `PROVIDE` to define a symbol in the linker script, which can be access in the C code.
+For example, the following linker script defines a symbol `_memory_start` at the start of the memory.
+```ld
+PROVIDE(_memory_start = ORIGIN(ram));
+```
+`ORIGIN` is a built-in function that returns the starting address of the memory region.
+
+
+## Format
+### clang-format
+```bash
+clang-format -i *[.ch]
+```
+*[.ch] means all files with .c and .h extension.
+`-i` means in-place, which means the file will be modified in place.

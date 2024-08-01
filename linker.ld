@@ -1,16 +1,4 @@
-/*
- * rvos.ld
- * Linker script for outputting to RVOS
- */
-
-/*
- * https://sourceware.org/binutils/docs/ld/Miscellaneous-Commands.html
- * OUTPUT_ARCH command specifies a particular output machine architecture.
- * "riscv" is the name of the architecture for both 64-bit and 32-bit
- * RISC-V target. We will further refine this by using -march
- * and -mabi when calling gcc.
- */
-OUTPUT_ARCH( "riscv" )
+OUTPUT_ARCH("riscv")
 
 /*
  * https://sourceware.org/binutils/docs/ld/Entry-Point.html
@@ -85,6 +73,7 @@ SECTIONS
 	 * starting with .text. The asterisk("*") in front of the
 	 * parentheses means to match the .text section of ANY object file.
 	 */
+	. = 0x80000000;
 	.text : {
 		PROVIDE(_text_start = .);
 		*(.text .text.*)
