@@ -21,7 +21,7 @@ ofiles += boot.o
 
 run: kernel.elf
 	echo "Press Ctrl-A and then X to exit QEMU"
-	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -kernel kernel.elf
+	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -s -S -kernel kernel.elf
 
 all: kernel.elf
 
