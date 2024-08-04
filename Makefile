@@ -13,36 +13,39 @@
 CC = riscv64-unknown-elf-gcc
 AS = riscv64-unknown-elf-as
 LD = riscv64-unknown-elf-ld
-CFLAGS = -nostdlib -fno-builtin -g -Wall -march=rv64g -mabi=lp64d -mcmodel=medany
+CFLAGS = -nostdlib -nostartfiles -fno-builtin -g -Wall -march=rv64g -mabi=lp64d -mcmodel=medany
 
 cfiles = $(wildcard *.c)
 asfiles = $(wildcard *.S)
-ofiles = $(cfiles:.c=.o)
-ofiles += $(asfiles:.S=.o)
+ofiles = $(patsubst %.c, out/%.o, $(cfiles))
+ofiles += $(patsubst %.S, out/%.o, $(asfiles))
 
-run: kernel.elf
+run: out/kernel.elf
 	echo "Press Ctrl-A and then X to exit QEMU"
-	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -s -S -kernel kernel.elf
+	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -s -kernel out/kernel.elf
 
+debug: out/kernel.elf
+	echo "Press Ctrl-A and then X to exit QEMU"
+	qemu-system-riscv64 -nographic -machine virt -cpu rv64 -m 128M -bios none -s -S -kernel out/kernel.elf
 
-all: kernel.elf
+all: out/kernel.elf
 
-kernel.elf: $(ofiles)
-	$(LD) -T linker.ld -o kernel.elf $^
+out/kernel.elf: $(ofiles)
+	$(LD) -T linker.ld -o $@ $^ -Map out/kernel.map
 
 # compile all c files
-%.o: %.c
+out/%.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 
 # compile all assembly files
-%.o: %.S
+out/%.o: %.S
 	$(AS) -o $@ $<
 
-objdump: kernel.elf
+objdump: out/kernel.elf
 	@echo "Disassemble kernel.elf"
-	riscv64-unknown-elf-objdump -d kernel.elf
+	riscv64-unknown-elf-objdump -dS out/kernel.elf > out/kernel.dump
 
 .PHONY : clean
 clean:
-	rm -f *.o *.elf
+	rm -f out/*.o out/*.elf out/*.map out/*.dump
