@@ -36,6 +36,13 @@ make run
 ```
 
 ## RVOS
+### Basic Initialization
+When a program is loaded, it requires:
+1. All it’s data is presented at correct memory address.
+2. The program counter is set to correct memory address.
+3. The bss segment are initialized to 0.
+4. The stack pointer is set to a proper address.
+
 ### bootloader
 Before we start running our OS, we need to write a bootloader. 
 The bootloader is the first thing that runs when the computer is turned on. 
@@ -61,6 +68,25 @@ PROVIDE(_memory_start = ORIGIN(ram));
 ```
 `ORIGIN` is a built-in function that returns the starting address of the memory region.
 
+Note that we should define the symbol in a wright data type, such as `.word` for 32-bit integer, `.byte` for 8-bit integer, etc.
+Because our system is a 64-bit system, we should use `.quad` for 64-bit integer. Otherwise the memory address will be wrong.
+
+We use a struct to define each byte in the HEAP is used or not.
+```c
+struct page {
+    uint8 flags;
+}
+```
+
+To implement the described memory allocation and deallocation scheme, you can follow these steps:
+1. Memory Allocation:
+* When allocating memory, mark the flags of the allocated bytes as 01.
+* Ensure that the last byte of the allocated memory block is marked with 11 to indicate the end of the allocation.
+
+2. Memory Deallocation:
+* When freeing memory, check the flags of the memory block.
+* Traverse through the allocated bytes and look for a byte with the 11 flag.
+* Once you reach a byte with the 11 flag, free the entire block, knowing that this marks the end of the allocated region.
 
 ## Format
 ### clang-format
