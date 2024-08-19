@@ -3,23 +3,21 @@
 #include "types.h"
 
 /*
-    The reason we use 32 bits instead of 64 bits is that we define our memory
-   length as 128M bytes, if we use 64 bits to represent the address, we need 64
-   bits to represent the length, which is 2^64 bytes, and we don't have that
-   much memory. If we try to access a memory address that is out of the range of
-   the memory, the program will crash. (Segmentation fault)
+    Note: Before we define symbols in mem.S, where we use `.word`, but we use uint32_t to access these symbols, which is wrong.
+	We correct this by redefine these symbols in assembly, using `quad` instead of `word`.
+	This way, we can use uint64_t to access these symbols. And works fine.
 */
 
-extern const uint32_t HEAP_START;  // read-only
-extern const uint32_t HEAP_SIZE;
-extern const uint32_t TEXT_START;
-extern const uint32_t TEXT_END;
-extern const uint32_t DATA_START;
-extern const uint32_t DATA_END;
-extern const uint32_t BSS_START;
-extern const uint32_t BSS_END;
-extern const uint32_t RODATA_START;
-extern const uint32_t RODATA_END;
+extern const uint64_t HEAP_START;  // read-only
+extern const uint64_t HEAP_SIZE;
+extern const uint64_t TEXT_START;
+extern const uint64_t TEXT_END;
+extern const uint64_t DATA_START;
+extern const uint64_t DATA_END;
+extern const uint64_t BSS_START;
+extern const uint64_t BSS_END;
+extern const uint64_t RODATA_START;
+extern const uint64_t RODATA_END;
 
 
 void print_memory() {
