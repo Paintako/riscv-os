@@ -7,7 +7,7 @@
 * NOTE: -t gives a tag/name to your image
 
 ### Running container
-`docker run -it --name os -v $PWD/work:/work linux_latest`
+`docker run -it --name os -v $PWD/:/app linux_latest`
 * Container Volumes: 
     * Volumes provide the ability to connect specific filesystem paths of the container back to the host machine.
     * -t: attach時Container的螢幕會接到原來的螢幕上
